@@ -24,6 +24,13 @@ class RequestController {
     _parseResult();
   }
 
+  Future<void>checkUser() async{
+    _res = await http.post(
+      Uri.parse(server + path), headers: _headers, body: jsonEncode(_body),
+    );
+    _parseResult();
+  }
+
   Future<void> get() async{
     _res = await http.get(
       Uri.parse (server + path), headers:_headers,
@@ -31,9 +38,9 @@ class RequestController {
     _parseResult();
   }
 
-  Future<void> getUser(email) async{
+  Future<void> getUser() async{
     _res = await http.get(
-      Uri.parse (server + path + "/" + email), headers:_headers,
+      Uri.parse (server + path ), headers:_headers,
     );
     _parseResult();
   }
