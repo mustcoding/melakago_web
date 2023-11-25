@@ -44,13 +44,27 @@ class appUser {
     RequestController req = RequestController(path: "/api/appuser.php");
     req.setBody(toJson());
     await req.post();
-    if (req.status() == 200) {
+    if (req.status() == 400) {
       return true;
     }
-    return false;
+    else if(req.status()==200) {
+      String data = req.result().toString();
+      print(data);
+      if(data == '{error: Email is already registered}'){
+        return false;
+      }
+      else {
+        return true;
+      }
+
+    }
+    else{
+      return true;
+    }
+
   }
 
-  Future<bool> isEmailRegistered(String email) async {
+/*  Future<bool> isEmailRegistered(String email) async {
     RequestController req = RequestController(path: "/api/appuser.php");
     req.setBody({"email":email});
     await req.checkUser();
@@ -58,7 +72,7 @@ class appUser {
       return true;
     }
     return false;
-  }
+  }*/
 
   static Future<List<appUser>> loadAll() async{
     List<appUser> result = [];

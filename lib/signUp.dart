@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:melakago_web/login.dart';
 
 import 'Model/appUser.dart';
 
@@ -218,7 +219,7 @@ class _signUpState extends State<signUp> {
 
     int roleId=0;
 
-    if (firstName.isNotEmpty && lastName.isNotEmpty && nickName.isNotEmpty
+   if (firstName.isNotEmpty && lastName.isNotEmpty && nickName.isNotEmpty
         && dateOfBirth.isNotEmpty && email.isNotEmpty && password.isNotEmpty
         && phoneNumber.isNotEmpty && selectedCountry != null && role != null) {
 
@@ -239,43 +240,11 @@ class _signUpState extends State<signUp> {
         roleId = 3;
       }
 
-      appUser user = appUser (firstName, lastName, nickName, dateOfBirth, phoneNumber,email, password,
-          accessStatus, selectedCountry.toString(), roleId);
-
-        //_AlertMessage("success");
-
-      //need to revise //==false
-      if (await user.isEmailRegistered(email)) {
-        _showMessage("Email is already registered");
-        setState(() {
-          firstNameController.clear();
-          lastNameController.clear();
-          nickNameController.clear();
-          dateOfBirthController.clear();
-          emailController.clear();
-          passwordController.clear();
-          phoneNumberController.clear();
-          selectedCountry = null; // Set selectedCountry to null
-          role = null; // Set role to null
-        });
-      }
-      else{
+      appUser user = appUser (firstName, lastName, nickName, dateOfBirth,
+          phoneNumber,email, password, accessStatus,
+          selectedCountry.toString(), roleId);
         if (await user.save()){
-          setState(() {
-            admin.add(user);
-            firstNameController.clear();
-            lastNameController.clear();
-            nickNameController.clear();
-            dateOfBirthController.clear();
-            emailController.clear();
-            passwordController.clear();
-            phoneNumberController.clear();
-          });
 
-          _AlertMessage("Successfully SignUp");
-          Navigator.pop(context);
-        } else {
-          _AlertMessage("Email Has Been Already Registered");
           setState(() {
             firstNameController.clear();
             lastNameController.clear();
@@ -287,11 +256,18 @@ class _signUpState extends State<signUp> {
             selectedCountry = null; // Set selectedCountry to null
             role = null; // Set role to null
           });
+          _AlertMessage("Sign Up Successful");
+          Future.delayed(Duration(seconds: 2), () {
+            // Navigate to the login screen
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginScreen()));
+          });
+
 
         }
-      }
-
-    }
+        else{
+          _AlertMessage("SIGNUP UNSUCCESSFUL: Email has been registered");
+        }
+   }
     else{
       _AlertMessage("Please Insert All The Information Needed");
       setState(() {
@@ -307,7 +283,6 @@ class _signUpState extends State<signUp> {
       });
 
     }
-
   }
 
   void _AlertMessage(String msg) {
